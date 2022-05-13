@@ -19,16 +19,20 @@ std::string encrypt(const Generalmsg &generalmsg) {
 }
 
 std::string gen_random_str(const int len) {
-    static const char alphanum[] =
+    const std::string CHARACTERS=
             "0123456789"
             "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
             "abcdefghijklmnopqrstuvwxyz"
             ".?:!,";
     std::string tmp_s;
+    std::random_device random_device;
+    std::mt19937 generator(random_device());
+    std::uniform_int_distribution<> distribution(0, CHARACTERS.size() - 1);
+
     tmp_s.reserve(len);
 
     for (int i = 0; i < len; ++i) {
-        tmp_s += alphanum[random() % (sizeof(alphanum) - 1)];
+        tmp_s += CHARACTERS[distribution(generator)];
     }
 
     return tmp_s;
@@ -110,8 +114,8 @@ int main(int argc, char *argv[]) {
     } else {
         sscanf(argv[4], "%d", &size);
     }
-    serial_port = open(port, O_RDWR);
-    if (!setup()) { exit(2);}
+    //serial_port = open(port, O_RDWR);
+    //if (!setup()) { exit(2);}
 
     std::cout<<size<<std::endl;
     for (int i = 0; i < number; ++i) {
@@ -127,7 +131,7 @@ int main(int argc, char *argv[]) {
 
         }
         std::printf("Sending: %s\n", encrypt(msg).c_str());
-        send(encrypt(msg));
+        //send(encrypt(msg));
     }
 
 }
