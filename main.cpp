@@ -86,7 +86,7 @@ void send(const std::string& msg) {
     char write_buf[256]; //WARNING : The last character must be change line character!
 
 
-    write(serial_port, msg, sizeof(msg);
+    write(serial_port, msg, sizeof(msg));
     std::cout << write_buf;
 }
 
