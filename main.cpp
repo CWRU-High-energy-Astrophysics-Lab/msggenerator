@@ -15,7 +15,7 @@ struct termios tty;
 
 std::string encrypt(const Generalmsg &generalmsg) {
     return std::string(generalmsg.getID() + "[" + generalmsg.getRev() + "]:" + std::to_string(generalmsg.getSize()) +
-                       generalmsg.getPayload());
+                       generalmsg.getPayload()+"\n");
 }
 
 std::string gen_random_str(const int len) {
@@ -83,7 +83,7 @@ bool setup() {
 }
 
 void send(const std::string& msg) {
-    char write_buf[sizeof(msg)]; //WARNING : The last character must be change line character!
+    char write_buf[sizeof(msg.c_str())]; //WARNING : The last character must be change line character!
     ;
     strcpy(write_buf, msg.c_str());
     write(serial_port, write_buf, sizeof(write_buf));
