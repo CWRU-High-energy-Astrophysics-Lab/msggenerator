@@ -114,8 +114,8 @@ int main(int argc, char *argv[]) {
     } else {
         sscanf(argv[4], "%d", &size);
     }
-    //serial_port = open(port, O_RDWR);
-    //if (!setup()) { exit(2);}
+    serial_port = open(port, O_RDWR);
+    if (!setup()) { exit(2);}
 
     std::cout<<size<<std::endl;
     for (int i = 0; i < number; ++i) {
