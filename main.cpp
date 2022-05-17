@@ -87,6 +87,7 @@ void send(const std::string& msg) {
     ;
     strcpy(write_buf, msg.c_str());
     write(serial_port, write_buf, sizeof(write_buf));
+    std<< write_buf;
 }
 
 
@@ -130,7 +131,7 @@ int main(int argc, char *argv[]) {
 
 
         }
-        std::printf("Sending: %s\n", encrypt(msg).c_str());
+        //std::printf("Sending: %s\n", encrypt(msg).c_str());
         send(encrypt(msg).c_str());
     }
 
