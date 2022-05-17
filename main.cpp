@@ -87,7 +87,7 @@ void send(const std::string& msg) {
     ;
     strcpy(write_buf, msg.c_str());
     write(serial_port, write_buf, sizeof(write_buf));
-    std<< write_buf;
+    std::cout << write_buf;
 }
 
 
