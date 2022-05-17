@@ -130,7 +130,7 @@ int main(int argc, char *argv[]) {
 
 
         }
-        std::printf("Sending: %s\n", encrypt(msg).c_str());
+       // std::printf("Sending: %s\n", encrypt(msg).c_str());
         send(encrypt(msg));
     }
 
