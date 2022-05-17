@@ -117,7 +117,7 @@ int main(int argc, char *argv[]) {
     serial_port = open(port, O_RDWR);
     if (!setup()) { exit(2);}
 
-    std::cout<<size<<std::endl;
+
     for (int i = 0; i < number; ++i) {
 
         Generalmsg msg;
@@ -130,7 +130,7 @@ int main(int argc, char *argv[]) {
 
 
         }
-        //std::printf("Sending: %s\n", encrypt(msg).c_str());
+        std::printf("Sending: %s\n", encrypt(msg).c_str());
         send(encrypt(msg).c_str());
     }
 
