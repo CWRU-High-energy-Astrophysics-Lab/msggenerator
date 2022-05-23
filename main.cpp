@@ -82,12 +82,11 @@ bool setup() {
     return true;
 }
 
-void send(const std::string msg) {
-    char write_buf[sizeof(msg)+1]; //WARNING : The last character must be change line character!
-    ;
-    strcpy(write_buf, msg.c_str());
-    write(serial_port, write_buf, sizeof(write_buf));
+
+void send(const std::string& msg) {
+        write(serial_port, static_cast<const void*>(msg.c_str()), msg.size() + 1);
 }
+
 
 
 int main(int argc, char *argv[]) {
@@ -130,8 +129,9 @@ int main(int argc, char *argv[]) {
 
 
         }
-        std::printf("Sending: %s\n", encrypt(msg).c_str());
-        send(encrypt(msg).c_str());
+        const std::string temp = encrypt(msg);
+        std::cout << "Sending: " << msg << std::endl;
+        send(msg);
     }
 
 }
