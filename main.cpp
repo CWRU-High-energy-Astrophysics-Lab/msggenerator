@@ -134,7 +134,7 @@ int main(int argc, char *argv[]) {
                 msg = Generalmsg("TEST", "rev1", gen_random_str(size), 1);
                 break;
             case 2:
-
+                msg =T2msg(t2_gen())
 
 
 
