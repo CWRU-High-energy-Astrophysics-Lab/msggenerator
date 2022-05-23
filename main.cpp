@@ -83,8 +83,9 @@ bool setup() {
     return true;
 }
 std::string t2_gen(){
-    auto time_in_nanoseconds =  std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now()).count();
+    auto time_in_nanoseconds =  std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now());
     std::cout << time_in_nanoseconds;
+    return "";
 }
 
 void send(const std::string& msg) {
