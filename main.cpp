@@ -130,8 +130,8 @@ int main(int argc, char *argv[]) {
 
         }
         const std::string temp = encrypt(msg);
-        std::cout << "Sending: " << msg << std::endl;
-        send(msg);
+        std::cout << "Sending: " << temp << std::endl;
+        send(temp);
     }
 
 }
