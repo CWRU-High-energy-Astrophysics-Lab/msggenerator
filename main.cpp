@@ -83,7 +83,9 @@ bool setup() {
     return true;
 }
 std::string t2_gen(){
-    auto time_in_nanoseconds =  std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now());
+    auto time_in_nanoseconds =  std::chrono::duration_cast<std::chrono::microseconds>
+            (std::chrono::high_resolution_clock::now().time_since_epoch()).count();
+
     std::cout << time_in_nanoseconds;
     return "";
 }
