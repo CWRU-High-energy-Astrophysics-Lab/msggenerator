@@ -7,6 +7,7 @@
 #include <cstdio>
 #include <cstring>
 #include <random>
+#include <chrono>
 
 
 char *port ;
@@ -81,7 +82,10 @@ bool setup() {
     }
     return true;
 }
-
+std::string t2_gen(){
+    auto time_in_nanoseconds =  std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now()).count();
+    std::cout << time_in_nanoseconds;
+}
 
 void send(const std::string& msg) {
         write(serial_port, static_cast<const void*>(msg.c_str()), msg.size() + 1);
@@ -125,6 +129,9 @@ int main(int argc, char *argv[]) {
                 exit(0);
             case 1:
                 msg = Generalmsg("TEST", "rev1", gen_random_str(size), 1);
+                break;
+            case 2:
+
 
 
 
