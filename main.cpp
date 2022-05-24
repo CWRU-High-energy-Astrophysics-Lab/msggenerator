@@ -94,7 +94,7 @@ std::vector<std::string> t2_gen(int quanity){
         int j = 0;
         while(currentsec == std::to_string( std::chrono::duration_cast<std::chrono::microseconds>
                                                  (std::chrono::high_resolution_clock::now().time_since_epoch()).count()).substr(0,10) ){
-            if(rand()% 10000000 < 45){
+            if(rand()% 10000000 < 100){
                 auto timestamp=std::to_string( std::chrono::duration_cast<std::chrono::microseconds>
                                                     (std::chrono::high_resolution_clock::now().time_since_epoch()).count()).substr(11);
 
@@ -153,8 +153,8 @@ int main(int argc, char *argv[]) {
     } else {
         sscanf(argv[4], "%d", &size);
     }
-    //serial_port = open(port, O_RDWR);
-    //if (!setup()) { exit(2);}
+    serial_port = open(port, O_RDWR);
+    if (!setup()) { exit(2);}
     Generalmsg msglist[number];
     Generalmsg msg;
     switch (type) {
@@ -184,7 +184,7 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i < number; ++i) {
         const std::string temp = encrypt(msglist[i]);
         std::cout << "Sending: " << temp << std::endl;
-        //send(temp);
+        send(temp);
     }
 
     }
