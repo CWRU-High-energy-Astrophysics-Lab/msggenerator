@@ -8,6 +8,7 @@
 #include <cstring>
 #include <random>
 #include <chrono>
+#include <vector>
 
 
 char *port ;
@@ -82,12 +83,44 @@ bool setup() {
     }
     return true;
 }
-std::string t2_gen(){
-    auto time_in_nanoseconds =  std::chrono::duration_cast<std::chrono::microseconds>
-            (std::chrono::high_resolution_clock::now().time_since_epoch()).count();
+std::vector<std::string> t2_gen(int quanity){
+    std::vector<std::string> outlist;
 
-    std::cout << time_in_nanoseconds;
-    return "";
+    for (int i = 0; i < quanity; ++i) {
+
+        auto currentsec = std::to_string( std::chrono::duration_cast<std::chrono::microseconds>
+                                                        (std::chrono::high_resolution_clock::now().time_since_epoch()).count()).substr(0,10);
+        std::string msg = "Sec,nt2,scaler: " + currentsec + " ## " + "Scaler\n";
+        int j = 0;
+        while(currentsec == std::to_string( std::chrono::duration_cast<std::chrono::microseconds>
+                                                 (std::chrono::high_resolution_clock::now().time_since_epoch()).count()).substr(0,10) ){
+            if(rand()% 10000000 < 45){
+                auto timestamp=std::to_string( std::chrono::duration_cast<std::chrono::microseconds>
+                                                    (std::chrono::high_resolution_clock::now().time_since_epoch()).count()).substr(11);
+
+                auto add = std::to_string(j) + " 1:"+timestamp+ '\n';
+
+                msg+=add;
+
+                j++;
+
+            }
+
+
+
+        }
+
+        msg.append(1,'\n');
+        outlist.push_back(msg);
+
+
+
+
+    }
+
+
+
+    return outlist;
 }
 
 void send(const std::string& msg) {
@@ -120,28 +153,40 @@ int main(int argc, char *argv[]) {
     } else {
         sscanf(argv[4], "%d", &size);
     }
-    serial_port = open(port, O_RDWR);
-    if (!setup()) { exit(2);}
+    //serial_port = open(port, O_RDWR);
+    //if (!setup()) { exit(2);}
+    Generalmsg msglist[number];
+    Generalmsg msg;
+    switch (type) {
+        case 0:
+            exit(0);
+        case 1:
+            for (int i = 0; i < number; ++i) {
 
-
-    for (int i = 0; i < number; ++i) {
-
-        Generalmsg msg;
-        switch (type) {
-            case 0:
-                exit(0);
-            case 1:
                 msg = Generalmsg("TEST", "rev1", gen_random_str(size), 1);
-                break;
-            case 2:
-                msg =T2msg(t2_gen());
+                msglist[i]=msg;
 
 
+            }
 
-        }
-        const std::string temp = encrypt(msg);
+            break;
+        case 2:
+            auto T2S =t2_gen(number);
+            for (int i = 0; i < number; i++) {
+                Generalmsg msg;
+
+                msg = T2msg(T2S[i]);
+
+                msglist[i]=msg;
+
+
+            }break;}
+    for (int i = 0; i < number; ++i) {
+        const std::string temp = encrypt(msglist[i]);
         std::cout << "Sending: " << temp << std::endl;
         send(temp);
     }
 
-}
+    }
+
+
