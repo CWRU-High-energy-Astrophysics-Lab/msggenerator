@@ -153,8 +153,8 @@ int main(int argc, char *argv[]) {
     } else {
         sscanf(argv[4], "%d", &size);
     }
-    serial_port = open(port, O_RDWR);
-    if (!setup()) { exit(2);}
+    //serial_port = open(port, O_RDWR);
+    //if (!setup()) { exit(2);}
     Generalmsg msglist[number];
     Generalmsg msg;
     switch (type) {
@@ -184,7 +184,7 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i < number; ++i) {
         const std::string temp = encrypt(msglist[i]);
         std::cout << "Sending: " << temp << std::endl;
-        send(temp);
+        //send(temp);
     }
 
     }
