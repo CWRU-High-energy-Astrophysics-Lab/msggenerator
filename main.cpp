@@ -17,7 +17,7 @@ struct termios tty;
 
 std::string encrypt(const Generalmsg &generalmsg) {
     return std::string(generalmsg.getID() + "[" + generalmsg.getRev() + "]:" + std::to_string(generalmsg.getSize()) +
-                       generalmsg.getPayload()+"\n");
+                       generalmsg.getPayload()+"\0");
 }
 
 std::string gen_random_str(const int len) {
