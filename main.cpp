@@ -185,7 +185,7 @@ int main(int argc, char *argv[]) {
     }
 
     std::ofstream myfile;
-    myfile.open("send.txt");
+    myfile.open("send.txt",std::ios::app);
     for (int i = 0; i < number; ++i) {
         const std::string temp = encrypt(msglist[i]);
         std::cout << "Sending: " << temp << std::endl;
