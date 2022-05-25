@@ -9,19 +9,20 @@
 #include <random>
 #include <chrono>
 #include <vector>
+#include <fstream>
 
 
-char *port ;
+char *port;
 int serial_port;
 struct termios tty;
 
 std::string encrypt(const Generalmsg &generalmsg) {
     return std::string(generalmsg.getID() + "[" + generalmsg.getRev() + "]:" + std::to_string(generalmsg.getSize()) +
-                       generalmsg.getPayload()+"\0");
+                       generalmsg.getPayload() + "\0");
 }
 
 std::string gen_random_str(const int len) {
-    const std::string CHARACTERS=
+    const std::string CHARACTERS =
             "0123456789"
             "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
             "abcdefghijklmnopqrstuvwxyz"
@@ -39,7 +40,6 @@ std::string gen_random_str(const int len) {
 
     return tmp_s;
 }
-
 
 
 bool setup() {
@@ -83,51 +83,50 @@ bool setup() {
     }
     return true;
 }
-std::vector<std::string> t2_gen(int quanity){
-    std::vector<std::string> outlist;
+
+std::vector <std::string> t2_gen(int quanity) {
+    std::vector <std::string> outlist;
 
     for (int i = 0; i < quanity; ++i) {
 
-        auto currentsec = std::to_string( std::chrono::duration_cast<std::chrono::microseconds>
-                                                        (std::chrono::high_resolution_clock::now().time_since_epoch()).count()).substr(0,10);
+        auto currentsec = std::to_string(std::chrono::duration_cast<std::chrono::microseconds>
+                                                 (std::chrono::high_resolution_clock::now().time_since_epoch()).count()).substr(
+                0, 10);
         std::string msg = "Sec,nt2,scaler: " + currentsec + " ## " + "Scaler\n";
         int j = 0;
-        while(currentsec == std::to_string( std::chrono::duration_cast<std::chrono::microseconds>
-                                                 (std::chrono::high_resolution_clock::now().time_since_epoch()).count()).substr(0,10) ){
-            if(rand()% 1000000 < 100){
-                auto timestamp=std::to_string( std::chrono::duration_cast<std::chrono::microseconds>
-                                                    (std::chrono::high_resolution_clock::now().time_since_epoch()).count()).substr(11);
+        while (currentsec == std::to_string(std::chrono::duration_cast<std::chrono::microseconds>
+                                                    (std::chrono::high_resolution_clock::now().time_since_epoch()).count()).substr(
+                0, 10)) {
+            if (rand() % 1000000 < 100) {
+                auto timestamp = std::to_string(std::chrono::duration_cast<std::chrono::microseconds>
+                                                        (std::chrono::high_resolution_clock::now().time_since_epoch()).count()).substr(
+                        11);
 
-                auto add = std::to_string(j) + " 1:"+timestamp+ '\n';
+                auto add = std::to_string(j) + " 1:" + timestamp + '\n';
 
-                msg+=add;
+                msg += add;
 
                 j++;
 
             }
 
 
-
         }
 
-        msg.append(1,'\n');
+        msg.append(1, '\n');
         outlist.push_back(msg);
-
-
 
 
     }
 
 
-
     return outlist;
 }
 
-void send(const std::string& msg) {
-        write(serial_port, static_cast<const void*>(msg.c_str()), msg.size() + 1);
+void send(const std::string &msg) {
+    write(serial_port, static_cast<const void *>(msg.c_str()), msg.size() + 1);
 
 }
-
 
 
 int main(int argc, char *argv[]) {
@@ -142,20 +141,20 @@ int main(int argc, char *argv[]) {
                "<quantity> is how many msg should be sent\n\r"
                "<port> is the port to output on\n\r"
                "<size> will default to 0 but is the size of the payload of msg where applicable\n\r"
-               "Error 2- port not found \n\r",argv[0]);
+               "Error 2- port not found \n\r", argv[0]);
 
         exit(0);
     }
     sscanf(argv[1], "%d", &type);
     sscanf(argv[2], "%d", &number);
-    port= argv[3];
+    port = argv[3];
     if (argc < 5) {
         size = 0;
     } else {
         sscanf(argv[4], "%d", &size);
     }
     serial_port = open(port, O_RDWR);
-    if (!setup()) { exit(2);}
+    if (!setup()) { exit(2); }
     Generalmsg msglist[number];
     Generalmsg msg;
     switch (type) {
@@ -165,29 +164,36 @@ int main(int argc, char *argv[]) {
             for (int i = 0; i < number; ++i) {
 
                 msg = Generalmsg("TEST", "rev1", gen_random_str(size), 1);
-                msglist[i]=msg;
+                msglist[i] = msg;
 
 
             }
 
             break;
         case 2:
-            auto T2S =t2_gen(number);
+            auto T2S = t2_gen(number);
             for (int i = 0; i < number; i++) {
                 Generalmsg msg;
 
                 msg = T2msg(T2S[i]);
 
-                msglist[i]=msg;
+                msglist[i] = msg;
 
 
-            }break;}
+            }
+            break;
+    }
+
+    std::ofstream myfile;
+    myfile.open("send.txt");
     for (int i = 0; i < number; ++i) {
         const std::string temp = encrypt(msglist[i]);
         std::cout << "Sending: " << temp << std::endl;
+        myfile << temp << "\n";
+
         send(temp);
     }
-
-    }
+    myfile.close();
+}
 
 
